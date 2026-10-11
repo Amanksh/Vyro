@@ -1,0 +1,545 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  Clapperboard,
+  Compass,
+  Handshake,
+  Megaphone,
+  Phone,
+  Play,
+  Users,
+  X,
+} from "lucide-react";
+import { brandDiagram, creatorDiagram } from "./diagrams";
+import { SiteLink, SiteShell } from "./site-shell";
+
+const ASSET = "/sites/swayhouse";
+
+type Film = "brands" | "creators";
+
+const partners = [
+  {
+    name: "Movals",
+    role: "Parent company",
+    src: `${ASSET}/logos/movals.png`,
+    href: "https://movalslogistics.com",
+  },
+  {
+    name: "Reliance Gulf",
+    role: "Parent company",
+    src: `${ASSET}/logos/reliance-gulf.png`,
+    href: "https://reliancegulfengg.com",
+  },
+  {
+    name: "PSN",
+    role: "Partner",
+    src: `${ASSET}/logos/psn.png`,
+    href: "https://psnengineering.com",
+  },
+  {
+    name: "Razorpay",
+    role: "Payments partner",
+    src: `${ASSET}/logos/razorpay.svg`,
+    href: "https://razorpay.com",
+  },
+  {
+    name: "Zuptek",
+    role: "Media & advertising partner",
+    src: `${ASSET}/logos/zuptek.png`,
+    href: "https://zuptek.com",
+  },
+];
+
+const films: Record<
+  Film,
+  {
+    title: string;
+    duration: string;
+    label: string;
+    landscape: string;
+    portrait: string;
+    posterLandscape: string;
+    posterPortrait: string;
+    captions: string;
+    narration: string[];
+  }
+> = {
+  brands: {
+    title: "For brands · Overview",
+    duration: "34s · Voiceover & music",
+    label: "Your campaign. One team.",
+    landscape: `${ASSET}/films/brands-landscape.mp4`,
+    portrait: `${ASSET}/films/brands-portrait.mp4`,
+    posterLandscape: `${ASSET}/films/brands-landscape.webp`,
+    posterPortrait: `${ASSET}/films/brands-portrait.webp`,
+    captions: `${ASSET}/films/brands-captions.vtt`,
+    narration: [
+      "One campaign. Many moving parts.",
+      "Creators. Contracts. Content. Approvals.",
+      "It all starts with your brief.",
+      "Goal, audience, timeline.",
+      "Then we find creators who actually fit.",
+      "Category, audience, language.",
+      "We agree the scope up front.",
+      "And keep the work moving, from content, to review, to approval.",
+      "One point of contact.",
+      "One team, start to finish.",
+      "Selection to delivery, in one clear process.",
+      "Your next campaign starts with a brief.",
+      "Send yours today.",
+    ],
+  },
+  creators: {
+    title: "For creators · Overview",
+    duration: "32s · Voiceover & music",
+    label: "You create. We handle the business.",
+    landscape: `${ASSET}/films/creators-landscape.mp4`,
+    portrait: `${ASSET}/films/creators-portrait.mp4`,
+    posterLandscape: `${ASSET}/films/creators-landscape.webp`,
+    posterPortrait: `${ASSET}/films/creators-portrait.webp`,
+    captions: `${ASSET}/films/creators-captions.vtt`,
+    narration: [
+      "You create. We handle the business.",
+      "First, know your angle.",
+      "Your niche, your audience, your content.",
+      "Then, find the fit.",
+      "Brand opportunities that are relevant to you.",
+      "Know the terms before you say yes.",
+      "Deliverables, usage, exclusivity.",
+      "We keep the details moving.",
+      "Calendars, invoices, follow-ups.",
+      "And you?",
+      "You keep creating.",
+      "Choose your level of support. It depends on your programme.",
+      "Tell us what you're building.",
+      "Explore creator management.",
+    ],
+  },
+};
+
+function useCount(target: number, playKey: number) {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let frame = 0;
+    if (reduce) {
+      frame = requestAnimationFrame(() => setValue(target));
+      return () => cancelAnimationFrame(frame);
+    }
+    const start = performance.now();
+    const duration = 1100;
+    const tick = (now: number) => {
+      const progress = Math.min(1, (now - start) / duration);
+      const eased = 1 - (1 - progress) ** 3;
+      setValue(Math.round(target * eased));
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [playKey, target]);
+
+  return value;
+}
+
+function Stat({
+  label,
+  target,
+  playKey,
+  onReplay,
+}: {
+  label: string;
+  target: number;
+  playKey: number;
+  onReplay: () => void;
+}) {
+  const value = useCount(target, playKey);
+  return (
+    <div>
+      <dt>{label}</dt>
+      <dd>
+        <button type="button" aria-label={`Replay company figures: ${target}+ ${label}`} onClick={onReplay}>
+          <span aria-hidden="true">
+            {value}
+            <span>+</span>
+          </span>
+          <span className="sh-sr">
+            {target}+
+          </span>
+        </button>
+      </dd>
+    </div>
+  );
+}
+
+function Diagram({ markup }: { markup: string }) {
+  return <div dangerouslySetInnerHTML={{ __html: markup }} />;
+}
+
+export function HomePage() {
+  const [playKey, setPlayKey] = useState(0);
+  const [film, setFilm] = useState<Film | null>(null);
+  const [narrow, setNarrow] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 650px)");
+    const apply = () => setNarrow(media.matches);
+    apply();
+    media.addEventListener("change", apply);
+    return () => media.removeEventListener("change", apply);
+  }, []);
+
+  useEffect(() => {
+    const nodes = document.querySelectorAll(".sh-diagram");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) entry.target.setAttribute("data-visible", "true");
+        }
+      },
+      { threshold: 0.35 },
+    );
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
+
+  const activeFilm = film ? films[film] : null;
+
+  return (
+    <SiteShell>
+      <main className="sh-page" id="main">
+        <section className="sh-hero">
+          <div className="sh-shell">
+            <div className="sh-hero-copy">
+              <p className="sh-eyebrow">
+                <BriefcaseBusiness aria-hidden="true" />
+                Creator management & brand campaigns
+              </p>
+              <h1 className="sh-title">
+                You Create.
+                <br />
+                <span>We Elevate.</span>
+              </h1>
+              <p className="sh-lede">
+                We handle the business around your content.
+                <br />
+                Creator careers. Brand campaigns. One team.
+              </p>
+              <div className="sh-actions">
+                <SiteLink href="/brands" className="sh-button">
+                  <Handshake aria-hidden="true" />
+                  For brands
+                  <ArrowRight aria-hidden="true" />
+                </SiteLink>
+                <SiteLink href="/creator-management" className="sh-button">
+                  <Users aria-hidden="true" />
+                  For creators
+                  <ArrowRight aria-hidden="true" />
+                </SiteLink>
+              </div>
+            </div>
+            <div className="sh-stats-wrap">
+              <dl className="sh-stats" aria-label="Company experience">
+                <Stat label="Creator Network" target={500} playKey={playKey} onReplay={() => setPlayKey((key) => key + 1)} />
+                <Stat label="Brand Collaborations" target={300} playKey={playKey} onReplay={() => setPlayKey((key) => key + 1)} />
+                <Stat label="Campaigns Delivered" target={50} playKey={playKey} onReplay={() => setPlayKey((key) => key + 1)} />
+              </dl>
+              <p className="sh-figure">
+                <SiteLink href="/work">Explore our experience</SiteLink>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="sh-partners" aria-label="Company relationships">
+          <div className="sh-shell">
+            <p className="sh-eyebrow">Connected by good company</p>
+          </div>
+          <div className="sh-window">
+            <div className="sh-track">
+              {[0, 1].map((copy) => (
+                <ul key={copy} aria-hidden={copy === 1}>
+                  {partners.map((partner) => (
+                    <li key={`${partner.name}-${copy}`}>
+                      <a className="sh-partner" href={partner.href} target="_blank" rel="noreferrer">
+                        <img src={partner.src} alt="" />
+                        <strong>{partner.name}</strong>
+                        <span>{partner.role}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="sh-section">
+          <div className="sh-shell">
+            <p className="sh-eyebrow">Find your path</p>
+            <h2 className="sh-heading">
+              Your next step, <em className="sh-accent">with us.</em>
+            </h2>
+            <div className="sh-paths">
+              <article className="sh-card">
+                <div className="sh-card-copy">
+                  <p className="sh-eyebrow">Campaigns, coordinated</p>
+                  <h3>For brands</h3>
+                  <p>Creator campaigns with a clear brief and one point of contact.</p>
+                  <Diagram markup={brandDiagram} />
+                  <p className="sh-caption">Creator fit. Clear scope. Coordinated delivery.</p>
+                  <SiteLink href="/brands" className="sh-textlink">
+                    Learn more for brands
+                    <ArrowRight aria-hidden="true" />
+                  </SiteLink>
+                </div>
+                <button
+                  type="button"
+                  className="sh-poster"
+                  aria-label="Watch overview for brands"
+                  aria-expanded={film === "brands"}
+                  aria-controls="homepage-audience-player"
+                  onClick={() => setFilm("brands")}
+                >
+                  <picture>
+                    <source media="(max-width: 650px)" srcSet={`${ASSET}/films/brands-portrait.webp`} />
+                    <img
+                      src={`${ASSET}/films/brands-landscape.webp`}
+                      alt="Vyro influence for brands. Headline: Your campaign. One team. Three connected cards read Brief, Creators and Content, on an orange background."
+                    />
+                  </picture>
+                  <span className="sh-play">
+                    <Play aria-hidden="true" width={14} height={14} />
+                    Play overview · 34s
+                  </span>
+                </button>
+              </article>
+              <article className="sh-card">
+                <div className="sh-card-copy">
+                  <p className="sh-eyebrow">Your work, supported</p>
+                  <h3>For creators</h3>
+                  <p>Management and commercial support, shaped to your programme.</p>
+                  <Diagram markup={creatorDiagram} />
+                  <p className="sh-caption">Opportunities. Agreed terms. Programme support.</p>
+                  <SiteLink href="/creator-management" className="sh-textlink">
+                    Learn more for creators
+                    <ArrowRight aria-hidden="true" />
+                  </SiteLink>
+                </div>
+                <button
+                  type="button"
+                  className="sh-poster"
+                  aria-label="Watch overview for creators"
+                  aria-expanded={film === "creators"}
+                  aria-controls="homepage-audience-player"
+                  onClick={() => setFilm("creators")}
+                >
+                  <picture>
+                    <source media="(max-width: 650px)" srcSet={`${ASSET}/films/creators-portrait.webp`} />
+                    <img
+                      src={`${ASSET}/films/creators-landscape.webp`}
+                      alt="Vyro influence for creators. Headline: You create. We handle the rest. A simple content frame with two cards beside it, Strategy and Business."
+                    />
+                  </picture>
+                  <span className="sh-play">
+                    <Play aria-hidden="true" width={14} height={14} />
+                    Play overview · 32s
+                  </span>
+                </button>
+              </article>
+            </div>
+            {activeFilm ? (
+              <div className="sh-player" id="homepage-audience-player">
+                <div className="sh-film-intro">
+                  <strong>{activeFilm.title}</strong>
+                  <span>{activeFilm.duration}</span>
+                </div>
+                <video
+                  key={`${film}-${narrow ? "portrait" : "landscape"}`}
+                  controls
+                  playsInline
+                  preload="metadata"
+                  poster={narrow ? activeFilm.posterPortrait : activeFilm.posterLandscape}
+                  aria-label={activeFilm.label}
+                >
+                  <source src={narrow ? activeFilm.portrait : activeFilm.landscape} type="video/mp4" />
+                  <track kind="captions" src={activeFilm.captions} srcLang="en" label="English (additional)" />
+                </video>
+                <div className="sh-player-controls">
+                  <p>Captions are included in the film. Additional English captions are available in the player.</p>
+                  <button type="button" className="sh-textlink" onClick={() => setFilm(null)}>
+                    <X aria-hidden="true" />
+                    Close video
+                  </button>
+                </div>
+                <details className="sh-transcript">
+                  <summary>Read the film transcript</summary>
+                  <p>Narration</p>
+                  {activeFilm.narration.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                </details>
+              </div>
+            ) : null}
+          </div>
+        </section>
+
+        <section className="sh-section">
+          <div className="sh-shell">
+            <div className="sh-section-top">
+              <div>
+                <p className="sh-eyebrow">What we do</p>
+                <h2 className="sh-heading">
+                  Choose your <em className="sh-accent">starting point.</em>
+                </h2>
+              </div>
+              <SiteLink href="/services" className="sh-textlink">
+                Explore all services
+                <ArrowRight aria-hidden="true" />
+              </SiteLink>
+            </div>
+            <div className="sh-services">
+              <section className="sh-service" id="for-brands" aria-labelledby="brand-service-heading">
+                <p className="sh-eyebrow">For brands</p>
+                <h3 id="brand-service-heading">Choose the campaign support you need.</h3>
+                <article>
+                  <Megaphone className="sh-icon" aria-hidden="true" />
+                  <h4>Influencer marketing</h4>
+                  <p>Plan a creator campaign around your product, audience and objective.</p>
+                  <SiteLink href="/influencer-marketing" className="sh-textlink">
+                    View service
+                    <ArrowRight aria-hidden="true" />
+                    <span className="sh-sr">: Influencer marketing</span>
+                  </SiteLink>
+                </article>
+                <article>
+                  <Users className="sh-icon" aria-hidden="true" />
+                  <h4>Creator discovery</h4>
+                  <p>Find creators whose content and audience fit your brief.</p>
+                  <SiteLink href="/creator-discovery" className="sh-textlink">
+                    View service
+                    <ArrowRight aria-hidden="true" />
+                    <span className="sh-sr">: Creator discovery</span>
+                  </SiteLink>
+                </article>
+                <article>
+                  <Clapperboard className="sh-icon" aria-hidden="true" />
+                  <h4>Campaign management</h4>
+                  <p>Coordinate the moving parts from agreed scope to delivery.</p>
+                  <SiteLink href="/influencer-campaign-management" className="sh-textlink">
+                    View service
+                    <ArrowRight aria-hidden="true" />
+                    <span className="sh-sr">: Campaign management</span>
+                  </SiteLink>
+                </article>
+              </section>
+              <section className="sh-service sh-service-creator" aria-labelledby="creator-service-heading">
+                <p className="sh-eyebrow">For creators</p>
+                <h3 id="creator-service-heading">Choose support for your creator business.</h3>
+                <article>
+                  <Compass className="sh-icon" aria-hidden="true" />
+                  <h4>Creator management</h4>
+                  <p>Get support for the business around your content.</p>
+                  <p className="sh-scope">
+                    Compare the scope and fees of the existing programmes, then choose the support that fits.
+                  </p>
+                  <SiteLink href="/creator-management" className="sh-textlink">
+                    View service
+                    <ArrowRight aria-hidden="true" />
+                    <span className="sh-sr">: Creator management</span>
+                  </SiteLink>
+                </article>
+                <div className="sh-choices">
+                  <SiteLink href="/creator-management#programmes">
+                    Explore management programmes
+                    <ArrowRight aria-hidden="true" />
+                  </SiteLink>
+                  <SiteLink href="/plans">
+                    Compare programmes & fees
+                    <ArrowRight aria-hidden="true" />
+                  </SiteLink>
+                  <SiteLink href="/applyforms">
+                    Apply as a creator
+                    <ArrowRight aria-hidden="true" />
+                  </SiteLink>
+                </div>
+                <p className="sh-scope">
+                  Responsibilities and commercial support follow your programme and agreement.
+                </p>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <section className="sh-section">
+          <div className="sh-shell">
+            <div className="sh-ending">
+              <div>
+                <p className="sh-eyebrow">For brands</p>
+                <h2 className="sh-heading">
+                  Bring your next <em className="sh-accent">campaign.</em>
+                </h2>
+                <p className="sh-lede">
+                  Share your objective, audience and starting context. We’ll help agree the scope.
+                </p>
+                <div className="sh-actions">
+                  <SiteLink href="/campaign-brief" className="sh-button">
+                    Build a brief
+                    <ArrowRight aria-hidden="true" />
+                  </SiteLink>
+                  <SiteLink href="/contact?audience=brand" className="sh-secondary">
+                    Talk about a campaign
+                  </SiteLink>
+                </div>
+                <SiteLink href="mailto:collab@vyroinfluence.in" className="sh-textlink">
+                  Brand enquiries · collab@vyroinfluence.in
+                </SiteLink>
+              </div>
+              <div>
+                <p className="sh-eyebrow">For creators</p>
+                <h2 className="sh-heading">
+                  Build your creator <em className="sh-accent">business.</em>
+                </h2>
+                <p className="sh-lede">
+                  Explore the real programmes, responsibilities and fees, or tell us what you’re creating.
+                </p>
+                <div className="sh-actions">
+                  <SiteLink href="/creator-management" className="sh-button">
+                    Explore management
+                    <ArrowRight aria-hidden="true" />
+                  </SiteLink>
+                  <SiteLink href="/applyforms" className="sh-secondary">
+                    Apply as a creator
+                  </SiteLink>
+                </div>
+                <SiteLink href="mailto:hello@vyroinfluence.in" className="sh-textlink">
+                  Creator enquiries · hello@vyroinfluence.in
+                </SiteLink>
+              </div>
+              <div className="sh-direct">
+                <p>We usually respond within one working day.</p>
+                <a
+                  className="sh-textlink"
+                  href="https://wa.me/919821819622"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="WhatsApp Vyro influence (opens in a new tab)"
+                >
+                  <Phone aria-hidden="true" />
+                  WhatsApp +91 98218 19622
+                </a>
+                <SiteLink href="/contact?audience=creator" className="sh-textlink">
+                  Ask about creator support
+                  <ArrowRight aria-hidden="true" />
+                </SiteLink>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </SiteShell>
+  );
+}
