@@ -9,16 +9,12 @@ import {
   Handshake,
   Megaphone,
   Phone,
-  Play,
   Users,
-  X,
 } from "lucide-react";
 import { brandDiagram, creatorDiagram } from "./diagrams";
 import { SiteLink, SiteShell } from "./site-shell";
 
 const ASSET = "/sites/swayhouse";
-
-type Film = "brands" | "creators";
 
 const partners = [
   {
@@ -52,73 +48,6 @@ const partners = [
     href: "https://zuptek.com",
   },
 ];
-
-const films: Record<
-  Film,
-  {
-    title: string;
-    duration: string;
-    label: string;
-    landscape: string;
-    portrait: string;
-    posterLandscape: string;
-    posterPortrait: string;
-    captions: string;
-    narration: string[];
-  }
-> = {
-  brands: {
-    title: "For brands · Overview",
-    duration: "34s · Voiceover & music",
-    label: "Your campaign. One team.",
-    landscape: `${ASSET}/films/brands-landscape.mp4`,
-    portrait: `${ASSET}/films/brands-portrait.mp4`,
-    posterLandscape: `${ASSET}/films/brands-landscape.webp`,
-    posterPortrait: `${ASSET}/films/brands-portrait.webp`,
-    captions: `${ASSET}/films/brands-captions.vtt`,
-    narration: [
-      "One campaign. Many moving parts.",
-      "Creators. Contracts. Content. Approvals.",
-      "It all starts with your brief.",
-      "Goal, audience, timeline.",
-      "Then we find creators who actually fit.",
-      "Category, audience, language.",
-      "We agree the scope up front.",
-      "And keep the work moving, from content, to review, to approval.",
-      "One point of contact.",
-      "One team, start to finish.",
-      "Selection to delivery, in one clear process.",
-      "Your next campaign starts with a brief.",
-      "Send yours today.",
-    ],
-  },
-  creators: {
-    title: "For creators · Overview",
-    duration: "32s · Voiceover & music",
-    label: "You create. We handle the business.",
-    landscape: `${ASSET}/films/creators-landscape.mp4`,
-    portrait: `${ASSET}/films/creators-portrait.mp4`,
-    posterLandscape: `${ASSET}/films/creators-landscape.webp`,
-    posterPortrait: `${ASSET}/films/creators-portrait.webp`,
-    captions: `${ASSET}/films/creators-captions.vtt`,
-    narration: [
-      "You create. We handle the business.",
-      "First, know your angle.",
-      "Your niche, your audience, your content.",
-      "Then, find the fit.",
-      "Brand opportunities that are relevant to you.",
-      "Know the terms before you say yes.",
-      "Deliverables, usage, exclusivity.",
-      "We keep the details moving.",
-      "Calendars, invoices, follow-ups.",
-      "And you?",
-      "You keep creating.",
-      "Choose your level of support. It depends on your programme.",
-      "Tell us what you're building.",
-      "Explore creator management.",
-    ],
-  },
-};
 
 function useCount(target: number, playKey: number) {
   const [value, setValue] = useState(0);
@@ -181,16 +110,6 @@ function Diagram({ markup }: { markup: string }) {
 
 export function HomePage() {
   const [playKey, setPlayKey] = useState(0);
-  const [film, setFilm] = useState<Film | null>(null);
-  const [narrow, setNarrow] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia("(max-width: 650px)");
-    const apply = () => setNarrow(media.matches);
-    apply();
-    media.addEventListener("change", apply);
-    return () => media.removeEventListener("change", apply);
-  }, []);
 
   useEffect(() => {
     const nodes = document.querySelectorAll(".sh-diagram");
@@ -205,8 +124,6 @@ export function HomePage() {
     nodes.forEach((node) => observer.observe(node));
     return () => observer.disconnect();
   }, []);
-
-  const activeFilm = film ? films[film] : null;
 
   return (
     <SiteShell>
@@ -296,26 +213,6 @@ export function HomePage() {
                     <ArrowRight aria-hidden="true" />
                   </SiteLink>
                 </div>
-                <button
-                  type="button"
-                  className="sh-poster"
-                  aria-label="Watch overview for brands"
-                  aria-expanded={film === "brands"}
-                  aria-controls="homepage-audience-player"
-                  onClick={() => setFilm("brands")}
-                >
-                  <picture>
-                    <source media="(max-width: 650px)" srcSet={`${ASSET}/films/brands-portrait.webp`} />
-                    <img
-                      src={`${ASSET}/films/brands-landscape.webp`}
-                      alt="Vyro influence for brands. Headline: Your campaign. One team. Three connected cards read Brief, Creators and Content, on an orange background."
-                    />
-                  </picture>
-                  <span className="sh-play">
-                    <Play aria-hidden="true" width={14} height={14} />
-                    Play overview · 34s
-                  </span>
-                </button>
               </article>
               <article className="sh-card">
                 <div className="sh-card-copy">
@@ -329,61 +226,8 @@ export function HomePage() {
                     <ArrowRight aria-hidden="true" />
                   </SiteLink>
                 </div>
-                <button
-                  type="button"
-                  className="sh-poster"
-                  aria-label="Watch overview for creators"
-                  aria-expanded={film === "creators"}
-                  aria-controls="homepage-audience-player"
-                  onClick={() => setFilm("creators")}
-                >
-                  <picture>
-                    <source media="(max-width: 650px)" srcSet={`${ASSET}/films/creators-portrait.webp`} />
-                    <img
-                      src={`${ASSET}/films/creators-landscape.webp`}
-                      alt="Vyro influence for creators. Headline: You create. We handle the rest. A simple content frame with two cards beside it, Strategy and Business."
-                    />
-                  </picture>
-                  <span className="sh-play">
-                    <Play aria-hidden="true" width={14} height={14} />
-                    Play overview · 32s
-                  </span>
-                </button>
               </article>
             </div>
-            {activeFilm ? (
-              <div className="sh-player" id="homepage-audience-player">
-                <div className="sh-film-intro">
-                  <strong>{activeFilm.title}</strong>
-                  <span>{activeFilm.duration}</span>
-                </div>
-                <video
-                  key={`${film}-${narrow ? "portrait" : "landscape"}`}
-                  controls
-                  playsInline
-                  preload="metadata"
-                  poster={narrow ? activeFilm.posterPortrait : activeFilm.posterLandscape}
-                  aria-label={activeFilm.label}
-                >
-                  <source src={narrow ? activeFilm.portrait : activeFilm.landscape} type="video/mp4" />
-                  <track kind="captions" src={activeFilm.captions} srcLang="en" label="English (additional)" />
-                </video>
-                <div className="sh-player-controls">
-                  <p>Captions are included in the film. Additional English captions are available in the player.</p>
-                  <button type="button" className="sh-textlink" onClick={() => setFilm(null)}>
-                    <X aria-hidden="true" />
-                    Close video
-                  </button>
-                </div>
-                <details className="sh-transcript">
-                  <summary>Read the film transcript</summary>
-                  <p>Narration</p>
-                  {activeFilm.narration.map((line) => (
-                    <p key={line}>{line}</p>
-                  ))}
-                </details>
-              </div>
-            ) : null}
           </div>
         </section>
 

@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { HtmlPage } from "@/components/sites/swayhouse/html-page";
-import { page } from "@/components/sites/swayhouse/generated/applyforms";
+import { CreatorApplicationPage } from "@/components/sites/swayhouse/creator-application-page";
 
 export const metadata: Metadata = {
-  title: page.title,
-  description: page.description,
+  title: "Apply as a Creator | Vyro influence",
+  description: "Apply to work with Vyro influence on creator collaborations and brand campaigns.",
 };
 
 export default function Route() {
-  return <HtmlPage html={page.html} chrome={page.chrome} />;
+  return <CreatorApplicationPage />;
 }

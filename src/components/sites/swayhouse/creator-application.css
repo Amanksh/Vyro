@@ -1,0 +1,311 @@
+.sh-creator-application {
+  min-height: 100vh;
+  padding: 132px 0 96px;
+  background:
+    radial-gradient(circle at 85% 10%, #117a681c, transparent 28%),
+    linear-gradient(180deg, #fffdfa 0%, var(--paper) 100%);
+}
+
+.sh-application-shell {
+  width: min(1050px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.sh-application-intro {
+  max-width: 720px;
+  margin: 0 auto 38px;
+  text-align: center;
+}
+
+.sh-application-intro h1 {
+  margin: 16px 0 18px;
+  font-family: var(--serif);
+  font-size: clamp(52px, 7vw, 88px);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+}
+
+.sh-application-intro h1 em {
+  color: var(--coral);
+  font-weight: 500;
+}
+
+.sh-application-intro > p:not(.sh-eyebrow) {
+  max-width: 620px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.sh-application-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 22px;
+  padding: 10px 14px;
+  color: var(--coral-deep);
+  background: #117a6812;
+  border: 1px solid #117a6826;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.sh-application-note svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.sh-application-card {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: clamp(24px, 5vw, 52px);
+  background: #fff;
+  border: 1px solid #1a1a1a14;
+  border-radius: 24px;
+  box-shadow: 0 18px 60px #2a1c140b;
+}
+
+.sh-application-card-heading {
+  padding-bottom: 28px;
+  border-bottom: 1px solid #1a1a1a14;
+}
+
+.sh-application-card-heading h2 {
+  margin: 10px 0 8px;
+  font-family: var(--serif);
+  font-size: clamp(34px, 5vw, 54px);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.sh-application-card-heading > p:last-child {
+  margin: 0;
+  color: var(--quiet);
+  font-size: 12px;
+}
+
+.sh-application-card-heading > p:last-child span,
+.sh-application-field label > span,
+.sh-application-choice legend > span,
+.sh-application-consent strong {
+  color: var(--coral-deep);
+}
+
+.sh-application-form {
+  display: grid;
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.sh-application-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 18px;
+}
+
+.sh-application-field,
+.sh-application-choice {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.sh-application-field label,
+.sh-application-choice legend {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sh-application-field label small,
+.sh-application-choice legend small {
+  color: var(--quiet);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.sh-application-field input,
+.sh-application-field select,
+.sh-application-field textarea {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  color: var(--ink);
+  background: #fbfaf7;
+  border: 1px solid #1a1a1a1c;
+  border-radius: 10px;
+  outline: 0;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  transition: border-color 160ms, box-shadow 160ms, background 160ms;
+}
+
+.sh-application-field textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.sh-application-field input::placeholder,
+.sh-application-field textarea::placeholder {
+  color: #8c8b84;
+}
+
+.sh-application-field input:focus,
+.sh-application-field select:focus,
+.sh-application-field textarea:focus {
+  background: #fff;
+  border-color: var(--coral);
+  box-shadow: 0 0 0 3px #117a6820;
+}
+
+.sh-choice-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sh-choice-grid label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 9px 14px;
+  color: var(--muted);
+  background: #fbfaf7;
+  border: 1px solid #1a1a1a1c;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sh-choice-grid label:has(input:checked) {
+  color: var(--coral-deep);
+  background: #117a6812;
+  border-color: var(--coral);
+}
+
+.sh-choice-grid input {
+  accent-color: var(--coral);
+}
+
+.sh-application-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 16px;
+  color: var(--muted);
+  background: #f7f6f1;
+  border: 1px solid #1a1a1a14;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.sh-application-consent input {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  accent-color: var(--coral);
+}
+
+.sh-application-submit {
+  justify-self: start;
+}
+
+.sh-application-success {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 58px 20px 28px;
+  text-align: center;
+}
+
+.sh-success-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  color: #fff;
+  background: var(--coral);
+  border-radius: 50%;
+}
+
+.sh-success-icon svg {
+  width: 25px;
+}
+
+.sh-application-success h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 38px;
+  font-weight: 500;
+}
+
+.sh-application-success p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.sh-application-success .sh-secondary {
+  min-height: 40px;
+  color: var(--muted);
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (max-width: 650px) {
+  .sh-creator-application {
+    padding: 104px 0 64px;
+  }
+
+  .sh-application-shell {
+    width: min(100% - 28px, 560px);
+  }
+
+  .sh-application-intro {
+    margin-bottom: 26px;
+  }
+
+  .sh-application-intro h1 {
+    font-size: 54px;
+  }
+
+  .sh-application-intro > p:not(.sh-eyebrow) {
+    font-size: 13px;
+  }
+
+  .sh-application-note {
+    align-items: flex-start;
+    border-radius: 14px;
+    text-align: left;
+  }
+
+  .sh-application-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sh-application-card {
+    padding: 23px 18px;
+    border-radius: 18px;
+  }
+
+  .sh-application-submit {
+    width: 100%;
+    justify-content: center;
+  }
+}
