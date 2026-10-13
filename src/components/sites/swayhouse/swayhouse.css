@@ -326,9 +326,22 @@
 
 .sh-hero {
   position: relative;
+  overflow: hidden;
   text-align: center;
-  padding: 46px 0 30px;
-  background: radial-gradient(420px 330px at 50% 52%, #117a681c, transparent 95%);
+  padding: 46px 0 34px;
+  background:
+    radial-gradient(520px 380px at 50% 53%, #117a6826, transparent 88%),
+    linear-gradient(180deg, #f3f7f5 0%, #f8fbf8 68%, #f3f7f5 100%);
+}
+
+.sh-hero::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  opacity: 0.26;
+  background-image: repeating-linear-gradient(115deg, transparent 0 120px, #117a680a 121px 122px, transparent 123px 230px);
+  animation: sh-hero-drift 18s ease-in-out infinite alternate;
+  pointer-events: none;
 }
 
 .sh-hero-copy {
@@ -390,6 +403,224 @@
   justify-content: center;
   gap: 12px;
   margin-top: 28px;
+}
+
+.sh-hero-scene {
+  position: relative;
+  isolation: isolate;
+  width: min(860px, 100%);
+  margin: 38px auto 0;
+  padding: 18px 22px 20px;
+  color: #eaf8f3;
+  text-align: left;
+  background:
+    radial-gradient(circle at 68% 8%, #2cae911f, transparent 27%),
+    linear-gradient(112deg, #0f2723 0%, #123e34 49%, #0b211e 100%);
+  border: 1px solid #8ed8c035;
+  border-radius: 22px;
+  box-shadow: 0 24px 64px #0b5e5022, inset 0 1px #dffff522;
+  overflow: hidden;
+}
+
+.sh-hero-scene::before {
+  position: absolute;
+  z-index: -1;
+  top: -120px;
+  left: 50%;
+  width: 260px;
+  height: 440px;
+  content: "";
+  background: linear-gradient(180deg, #9ff0db35, transparent 82%);
+  filter: blur(16px);
+  opacity: 0.7;
+  transform: translateX(-50%) rotate(18deg);
+  pointer-events: none;
+}
+
+.sh-hero-scene::after {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  content: "";
+  opacity: 0.13;
+  background-image: repeating-linear-gradient(0deg, transparent 0 3px, #fff 4px, transparent 5px 8px);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.sh-scene-header,
+.sh-scene-footer {
+  position: relative;
+  z-index: 2;
+  color: #b7d8cf;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.sh-scene-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #d6fff01c;
+}
+
+.sh-scene-track {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px minmax(0, 1fr);
+  align-items: center;
+  gap: 20px;
+  padding: 26px 12px 24px;
+}
+
+.sh-scene-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 12px;
+  align-items: center;
+  min-height: 112px;
+  padding: 18px;
+  background: #ffffff0d;
+  border: 1px solid #d6fff02b;
+  border-radius: 14px;
+  box-shadow: 0 14px 34px #0615122b;
+  backdrop-filter: blur(10px);
+  animation: sh-hero-card 7s ease-in-out infinite;
+}
+
+.sh-scene-card-brand {
+  animation-delay: -3.5s;
+}
+
+.sh-scene-index {
+  position: absolute;
+  top: 11px;
+  right: 13px;
+  color: #7ec8b8;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.sh-scene-icon {
+  display: grid;
+  grid-row: span 2;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  color: #0b2721;
+  background: #d5f4eb;
+  border-radius: 11px;
+}
+
+.sh-scene-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.sh-scene-card strong {
+  align-self: end;
+  font-family: var(--serif);
+  font-size: 25px;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+.sh-scene-card small {
+  align-self: start;
+  margin-top: 7px;
+  color: #b7d8cf;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.sh-scene-bridge {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  color: #c8eee4;
+  text-align: center;
+}
+
+.sh-scene-bridge strong {
+  color: #ffbb9c;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sh-scene-bridge small {
+  color: #9ecdc0;
+  font-size: 10px;
+}
+
+.sh-scene-bridge-line {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 2px;
+  margin-bottom: 3px;
+  background: linear-gradient(90deg, transparent, #ff9772, transparent);
+}
+
+.sh-scene-bridge-line::before,
+.sh-scene-bridge-line::after {
+  position: absolute;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  content: "";
+  background: #ff9772;
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px #ff97721c, 0 0 22px #ff9772;
+  transform: translateY(-50%);
+}
+
+.sh-scene-bridge-line::before {
+  left: 0;
+}
+
+.sh-scene-bridge-line::after {
+  right: 0;
+}
+
+.sh-scene-bridge-line i {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #ffb9a0;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: sh-hero-pulse 2.4s ease-out infinite;
+}
+
+.sh-scene-footer {
+  padding-top: 14px;
+  border-top: 1px solid #d6fff01c;
+  letter-spacing: 0.11em;
+  text-align: center;
+}
+
+.sh-scene-scan {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: #d6fff0a8;
+  box-shadow: 0 0 16px 2px #d6fff066;
+  opacity: 0.7;
+  animation: sh-hero-scan 8s linear infinite;
+  pointer-events: none;
 }
 
 .sh-button,
@@ -1185,6 +1416,44 @@
   }
 }
 
+@keyframes sh-hero-drift {
+  to {
+    transform: translateX(70px);
+  }
+}
+
+@keyframes sh-hero-card {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes sh-hero-pulse {
+  0% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+  80%,
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.6);
+  }
+}
+
+@keyframes sh-hero-scan {
+  0% {
+    transform: translateX(-12px);
+  }
+  50%,
+  100% {
+    transform: translateX(860px);
+  }
+}
+
 @keyframes sh-dock {
   0% {
     opacity: 0.15;
@@ -1277,6 +1546,57 @@
 
   .sh-hero {
     padding: 30px 0 24px;
+  }
+
+  .sh-hero-scene {
+    margin-top: 30px;
+    padding: 15px 14px 16px;
+    border-radius: 17px;
+  }
+
+  .sh-scene-header {
+    font-size: 8px;
+  }
+
+  .sh-scene-track {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 20px 0 18px;
+  }
+
+  .sh-scene-card {
+    min-height: 82px;
+    padding: 14px;
+  }
+
+  .sh-scene-card strong {
+    font-size: 22px;
+  }
+
+  .sh-scene-bridge {
+    grid-template-columns: 1fr auto 1fr;
+    width: 100%;
+    gap: 7px;
+  }
+
+  .sh-scene-bridge small {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .sh-scene-bridge strong {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .sh-scene-bridge-line {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  .sh-scene-footer {
+    font-size: 8px;
+    line-height: 1.5;
   }
 
   .sh-title {
@@ -1396,6 +1716,10 @@
 
   .sh-node,
   .sh-line,
+  .sh-hero::before,
+  .sh-scene-card,
+  .sh-scene-bridge-line i,
+  .sh-scene-scan,
   .sh-button,
   .sh-button svg,
   .sh-secondary svg,

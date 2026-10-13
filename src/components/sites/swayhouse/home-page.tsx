@@ -135,11 +135,34 @@ export function HomePage() {
                 <BriefcaseBusiness aria-hidden="true" />
                 Creator management & brand campaigns
               </p>
-              <h1 className="sh-title">
-                You Create.
-                <br />
-                <span>We Elevate.</span>
-              </h1>
+              <h1 className="sh-sr">Creator stories. Brand impact.</h1>
+              <div className="sh-hero-scene" aria-label="How Vyro influence connects creators and brands">
+                <div className="sh-scene-header">
+                  <span>THE WORK BEHIND THE WORK</span>
+                  <span aria-hidden="true">00:01 — 00:30</span>
+                </div>
+                <div className="sh-scene-track">
+                  <div className="sh-scene-card sh-scene-card-creator">
+                    <span className="sh-scene-index">01</span>
+                    <span className="sh-scene-icon"><Users aria-hidden="true" /></span>
+                    <strong>Creator story</strong>
+                    <small>Your voice. Your audience.</small>
+                  </div>
+                  <div className="sh-scene-bridge" aria-hidden="true">
+                    <span className="sh-scene-bridge-line"><i /></span>
+                    <strong>one team</strong>
+                    <small>finds the fit</small>
+                  </div>
+                  <div className="sh-scene-card sh-scene-card-brand">
+                    <span className="sh-scene-index">02</span>
+                    <span className="sh-scene-icon"><Megaphone aria-hidden="true" /></span>
+                    <strong>Brand impact</strong>
+                    <small>Ideas people remember.</small>
+                  </div>
+                </div>
+                <p className="sh-scene-footer">From a first brief to a campaign worth talking about.</p>
+                <span className="sh-scene-scan" aria-hidden="true" />
+              </div>
               <p className="sh-lede">
                 We handle the business around your content.
                 <br />
